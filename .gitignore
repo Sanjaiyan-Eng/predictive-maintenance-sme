@@ -7,3 +7,12 @@ data/raw/
 data/processed/
 data/simulated/
 mlruns/
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Backend
+backend/__pycache__/
+backend/*.pyc
+backend/predictions.db
