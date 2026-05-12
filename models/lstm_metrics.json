@@ -1,0 +1,16 @@
+{
+  "model": "LSTM",
+  "mae": 4.16,
+  "rmse": 12.73,
+  "r2": 0.9516,
+  "rul_cap": 200,
+  "seq_len": 30,
+  "sensors_used": [
+    "temperature",
+    "vibration",
+    "pressure",
+    "rotational_speed"
+  ],
+  "epochs_run": 19,
+  "best_val_mae": 5.2897
+}
