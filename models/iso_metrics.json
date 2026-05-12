@@ -1,9 +1,10 @@
 {
   "model": "Isolation Forest",
-  "contamination": 0.1,
+  "contamination": 0.15,
   "roc_auc": 0.8012,
-  "f1": 0.1471,
-  "recall": 0.1724,
-  "precision": 0.1282,
-  "feature_count": 75
+  "f1": 0.1324,
+  "recall": 0.3103,
+  "precision": 0.0841,
+  "feature_count": 75,
+  "note": "contamination=0.15 chosen for higher recall in SME context"
 }
