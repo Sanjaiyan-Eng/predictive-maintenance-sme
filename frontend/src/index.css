@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background: #0f1117;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.jp {
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+:root {
+  --bg-primary:   #0f1117;
+  --bg-card:      #1a1f2e;
+  --bg-hover:     #222840;
+  --border:       #2d3748;
+  --text-primary: #e2e8f0;
+  --text-muted:   #718096;
+  --green:        #48bb78;
+  --yellow:       #f6ad55;
+  --red:          #fc8181;
+  --blue:         #63b3ed;
+  --purple:       #b794f4;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.badge-normal   { background: #1a3a2a; color: var(--green);  }
+.badge-warning  { background: #3a2a1a; color: var(--yellow); }
+.badge-critical { background: #3a1a1a; color: var(--red);    }
+
+.btn {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.btn:hover     { opacity: 0.85; }
+.btn-primary   { background: var(--blue);   color: #0f1117; }
+.btn-secondary { background: #2d3748;       color: var(--text-primary); }
+.btn-danger    { background: var(--red);    color: #fff; }
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1f2e 25%, #222840 50%, #1a1f2e 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.label-en { font-size: 12px; color: var(--text-muted); }
+.label-jp { font-size: 10px; color: #4a5568; font-family: 'Noto Sans JP', sans-serif; margin-top: 1px; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 8px; text-align: left; }
+thead tr { border-bottom: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 500; }
+tbody tr { border-bottom: 1px solid #1a1f2e; font-size: 13px; }
+tbody tr:hover { background: var(--bg-hover); }
