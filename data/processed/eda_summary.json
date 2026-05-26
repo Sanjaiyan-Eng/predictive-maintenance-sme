@@ -1,0 +1,52 @@
+{
+  "dataset": "UCI AI4I 2020 Predictive Maintenance",
+  "total_rows": 10000,
+  "failure_count": 339,
+  "normal_count": 9661,
+  "failure_rate_pct": 3.39,
+  "sensors": [
+    "Air temperature [K]",
+    "Process temperature [K]",
+    "Rotational speed [rpm]",
+    "Torque [Nm]",
+    "Tool wear [min]"
+  ],
+  "failure_modes": [
+    "TWF",
+    "HDF",
+    "PWF",
+    "OSF",
+    "RNF"
+  ],
+  "failure_mode_counts": {
+    "TWF": 46,
+    "HDF": 115,
+    "PWF": 95,
+    "OSF": 98,
+    "RNF": 19
+  },
+  "machine_type_counts": {
+    "L": 6000,
+    "M": 2997,
+    "H": 1003
+  },
+  "top_correlated_sensors": [
+    "Torque [Nm]",
+    "Tool wear [min]",
+    "Air temperature [K]"
+  ],
+  "key_observations": [
+    "Dataset is highly imbalanced — 3.4% failure rate",
+    "Tool wear and torque show strongest correlation with failure",
+    "High quality machines (H) have higher failure rate than L and M",
+    "No missing values — dataset is clean",
+    "Use PR-AUC not accuracy — accuracy is misleading on this data",
+    "Five distinct failure modes: TWF, HDF, PWF, OSF, RNF"
+  ],
+  "meti_alignment": [
+    "Simulates real Japanese SME sensor data constraints",
+    "No expensive IoT hardware assumed",
+    "Designed for legacy machine compatibility",
+    "Aligned with METI DX agenda for manufacturing SMEs"
+  ]
+}
