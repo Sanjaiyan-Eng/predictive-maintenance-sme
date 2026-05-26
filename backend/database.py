@@ -3,7 +3,7 @@ import json
 import os
 from datetime import datetime
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'predictions.db')
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'predictions.db')
 
 # ── Initialize database ────────────────────────────────────────────
 def init_db():

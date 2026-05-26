@@ -1,5 +1,8 @@
 import os
-os.chdir(r'D:\predictive-maintenance-sme')
+
+# Set working directory to project root — works on both Windows and Render
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(ROOT)
 
 import pickle
 import json
