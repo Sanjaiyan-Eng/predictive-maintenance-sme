@@ -132,24 +132,30 @@ class PredictiveMaintenanceEngine:
             import tensorflow as tf
             from tensorflow import keras
 
-            keras_path = os.path.join(self.model_dir, 'lstm_rul.keras')
-            h5_path    = os.path.join(self.model_dir, 'lstm_rul.h5')
+    # Rebuild architecture — avoids Keras version compatibility issues
+            SEQ_LEN  = 30
+            N_SENSORS = 4
 
-            if os.path.exists(keras_path):
-                self.lstm = keras.models.load_model(keras_path)
-                print("  lstm_rul.keras loaded")
-            elif os.path.exists(h5_path):
-                self.lstm = keras.models.load_model(h5_path)
-                print("  lstm_rul.h5 loaded")
-            else:
-                raise FileNotFoundError("No LSTM model file found")
+            inputs  = keras.Input(shape=(SEQ_LEN, N_SENSORS))
+            x       = keras.layers.LSTM(64, return_sequences=True)(inputs)
+            x       = keras.layers.Dropout(0.2)(x)
+            x       = keras.layers.LSTM(32)(x)
+            x       = keras.layers.Dropout(0.2)(x)
+            x       = keras.layers.Dense(16, activation='relu')(x)
+            outputs = keras.layers.Dense(1)(x)
+            self.lstm = keras.Model(inputs, outputs)
+            self.lstm.compile(optimizer='adam', loss='mae')
+
+    # Load weights only — version independent
+            weights_path = os.path.join(self.model_dir, 'lstm_weights.weights.h5')
+            self.lstm.load_weights(weights_path)
+            print("  lstm_weights.h5 loaded")
 
             self.lstm_scaler = self._load('lstm_scaler.pkl')
             self.lstm_loaded = True
         except Exception as e:
             print(f"  LSTM not loaded: {e}")
             self.lstm_loaded = False
-
         print("All models loaded.\n")
 
     def _run_isolation_forest(self, X):
