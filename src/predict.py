@@ -129,17 +129,18 @@ class PredictiveMaintenanceEngine:
 
         # LSTM
         try:
-            from tensorflow.keras.models import load_model
-    # Try .h5 first (universal), then .keras
-            h5_path   = os.path.join(self.model_dir, 'lstm_rul.h5')
-            keras_path = os.path.join(self.model_dir, 'lstm_rul.keras')
+            import tensorflow as tf
+            from tensorflow import keras
 
-            if os.path.exists(h5_path):
-                self.lstm = load_model(h5_path)
-                print("  lstm_rul.h5 loaded")
-            elif os.path.exists(keras_path):
-                self.lstm = load_model(keras_path)
+            keras_path = os.path.join(self.model_dir, 'lstm_rul.keras')
+            h5_path    = os.path.join(self.model_dir, 'lstm_rul.h5')
+
+            if os.path.exists(keras_path):
+                self.lstm = keras.models.load_model(keras_path)
                 print("  lstm_rul.keras loaded")
+            elif os.path.exists(h5_path):
+                self.lstm = keras.models.load_model(h5_path)
+                print("  lstm_rul.h5 loaded")
             else:
                 raise FileNotFoundError("No LSTM model file found")
 
