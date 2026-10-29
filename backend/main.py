@@ -195,11 +195,25 @@ def alerts(limit: int = 20, unresolved_only: bool = False):
         "alerts":  records
     }
 
+# ── Demo endpoint — healthy / degrading / failing stages ──────────
+ANOMALY_START = {1: 3800, 2: 4000, 3: 4200, 4: 3600, 5: 4400}
+DEFAULT_STAGE = {1: 'healthy', 2: 'healthy', 3: 'degrading',
+                 4: 'degrading', 5: 'failing'}
+
+def stage_end_index(machine_id, stage):
+    a = ANOMALY_START[machine_id]
+    if stage == 'healthy':
+        return 1000
+    if stage == 'degrading':
+        return a + 100
+    return a + 170
+
+
 @app.get("/demo/{machine_id}")
-def demo_prediction(machine_id: int):
+def demo_prediction(machine_id: int, stage: Optional[str] = None):
     """
-    Demo endpoint — runs prediction on real simulated data.
-    No request body needed. Used by React frontend for live demo.
+    Demo endpoint — runs prediction on simulated data.
+    stage: healthy, degrading or failing (default depends on machine).
     """
     if machine_id not in range(1, 6):
         raise HTTPException(
@@ -207,39 +221,46 @@ def demo_prediction(machine_id: int):
             detail="machine_id must be between 1 and 5"
         )
 
+    stage = stage or DEFAULT_STAGE[machine_id]
+    if stage not in ('healthy', 'degrading', 'failing'):
+        raise HTTPException(
+            status_code=400,
+            detail="stage must be healthy, degrading or failing"
+        )
+
     try:
-        # Load simulated data for this machine
         sim = pd.read_csv('data/simulated/sensor_simulation.csv')
         mdf = sim[sim['machine_id'] == machine_id].reset_index(drop=True)
 
-        # Use last 50 cycles as sensor readings
-        recent = mdf.tail(50)
+        window = mdf.iloc[:stage_end_index(machine_id, stage)]
+        recent = window.tail(50)
 
-        readings = [
-            SensorReading(
-                air_temperature=     float(row['temperature']),
-                process_temperature= float(row['temperature']) + 10,
+        readings = []
+        for _, row in recent.iterrows():
+            # Map simulated 60-85 range into the UCI training range (~298-303 K)
+            air = 298 + (float(row['temperature']) - 60) * 0.2
+            readings.append(SensorReading(
+                air_temperature=     air,
+                process_temperature= air + 10,
                 rotational_speed=    float(row['rotational_speed']),
                 torque=              float(row['pressure']) / 3,
                 tool_wear=           float(row['vibration']) * 100,
                 machine_type='M'
-            )
-            for _, row in recent.iterrows()
-        ]
+            ))
 
         df = readings_to_df(readings)
 
-        # LSTM sequence — last 30 cycles
         sensors = ['temperature', 'vibration',
                    'pressure', 'rotational_speed']
-        lstm_seq = mdf[sensors].tail(30).values
+        lstm_seq = window[sensors].tail(30).values
 
         result = app.state.engine.predict(df, lstm_sequence=lstm_seq)
         save_prediction(machine_id, result)
 
         return {
-            "machine_id": machine_id,
-            "timestamp":  datetime.utcnow().isoformat(),
+            "machine_id":      machine_id,
+            "stage":           stage,
+            "timestamp":       datetime.utcnow().isoformat(),
             "cycles_analyzed": len(recent),
             **result
         }

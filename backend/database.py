@@ -5,6 +5,7 @@ from datetime import datetime
 
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'predictions.db')
 
+
 # ── Initialize database ────────────────────────────────────────────
 def init_db():
     conn = sqlite3.connect(DB_PATH)
